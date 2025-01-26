@@ -27,6 +27,8 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 #define o endereço do zookeeper
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 #define o endereço do broker e PLAINTEXT para não usar SSL(criptografia)
       - KAFKA_LISTENER_SECURITY_PROTOCOL=PLAINTEXT #define o protocolo de segurança
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT #define o protocolo de segurança para cada listener
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 #define o endereço do broker
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 #define o fator de replicação do tópico , 1 para ambiente de desenvolvimento
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true  #define se o tópico será criado automaticamente
     ports:
@@ -47,3 +49,25 @@ services:
                 bootstrap.servers: "kafka:9092"
     depends_on:
       - kafka
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: noticia
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+  
+  consumer:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    command: python app/consumer/consumer.py
+    depends_on:
+      - kafka
+      - zookeeper
+      - db
+      - akhq
+      - web

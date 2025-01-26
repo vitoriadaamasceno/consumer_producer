@@ -4,8 +4,7 @@ from typing import Annotated
 from app.crawler.crawler import Crawler
 import asyncio
 import json
-
-from app.producer import get_kafka_producer, send_to_topic
+from app.producer.producer import get_kafka_producer, send_to_topic
 
  
 class Noticia(BaseModel):
