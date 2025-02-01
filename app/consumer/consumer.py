@@ -10,18 +10,17 @@ import logging
 
 
 
-class NoticiaRepository:
-    @staticmethod
-    async def add(db: Session, noticia: Noticia):
-        noticia_db = Noticia(
-            titulo=noticia['titulo'],
-            data_publicacao=noticia['data_publicacao'],
-            link=noticia['link']
-        )
-        db.add(noticia_db)
-        await db.commit()
-        await db.refresh(noticia_db)
-        return True
+
+async def add(db: Session, noticia: Noticia):
+    noticia_db = Noticia(
+        titulo=noticia['titulo'],
+        data_publicacao=noticia['data_publicacao'],
+        link=noticia['link']
+    )
+    db.add(noticia_db)
+    await db.commit()
+    await db.refresh(noticia_db)
+    return True
 
 
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
@@ -41,7 +40,7 @@ async def consume():
                 noticia = json.loads(msg.value)
                 print(noticia)
                 async for db in get_db_session():
-                    await NoticiaRepository.add(db, noticia)
+                    await add(db, noticia)
             except Exception as e:    
                 logging.error(f"Error consuming message: {e}")
     finally:    

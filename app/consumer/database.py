@@ -1,4 +1,3 @@
-import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, types
@@ -6,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 DATABASE_URL = "postgresql+asyncpg://postgres:postgres@db/noticia"
 Base = declarative_base()
+
 class Noticia(Base):
     __tablename__ = "noticias"
 
