@@ -6,12 +6,6 @@ import asyncio
 import json
 from app.producer.producer import get_kafka_producer, send_to_topic
 
- 
-class Noticia(BaseModel):
-    titulo: str
-    data_publicacao: str | None = None
-    url: str
-
 
 app = FastAPI(title="API de Notícias")
 
