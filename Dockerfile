@@ -21,6 +21,3 @@ COPY . .
 
 # Definir o PYTHONPATH
 ENV PYTHONPATH=/usr/src/app
-
-# Comando para rodar o script
-CMD ["python", "app/consumer/consumer.py"]
