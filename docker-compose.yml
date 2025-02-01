@@ -65,6 +65,7 @@ services:
     volumes:
       - .:/usr/src/app
     command: python app/consumer/consumer.py
+    restart: on-failure
     depends_on:
       - kafka
       - zookeeper
